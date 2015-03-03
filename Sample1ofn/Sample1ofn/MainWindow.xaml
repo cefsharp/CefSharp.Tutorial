@@ -1,0 +1,9 @@
+﻿<Window x:Class="Sample1ofn.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        Title="MainWindow" Height="550" Width="625">
+	<Grid>
+		<cefSharp:ChromiumWebBrowser Grid.Row="0" Address="https://github.com/cefsharp/CefSharp/wiki/Frequently-asked-questions" />
+	</Grid>
+</Window>
