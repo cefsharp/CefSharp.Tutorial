@@ -2,7 +2,7 @@
 1 Overview
 
 This is a Hello World! Type CefSharp sample that should work with
-NuGet CefSharp Version 37.0.0.
+NuGet CefSharp Version 39.0.0.
 
 The following steps are necessary to get this to work
 (Tested with Visual Studio 2013 Express):
