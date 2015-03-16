@@ -8,3 +8,8 @@ Please be sure to read the Readme.txt files in each sub-folder to understand mor
 ## Sample1ofn
 
 This is a minimal bare bones XAML+Nuget demo of the CefSharp project.
+[http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part](http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part)
+
+## Sample2
+
+Contains sample applications that illustrate the usage of a *ResourceHandler* in CefSharp.
