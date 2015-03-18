@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows.Input;
+using System.Text;
 using CefSharp;
 using CefSharp.Wpf;
 using GalaSoft.MvvmLight;
@@ -19,10 +21,6 @@ namespace KnowledgeBase.ViewModel
 		public const string TestMarkDown2HTMLConversion = "http://test/resource/markdown";
 		public const string TestMarkDownStyleURL = "http://test/resource/github-markdown.css";
 
-		private string markdownStyle;
-		private string markdownContent;
-		private string markdownHTMLOutput;
-
 		private ICommand mTestUrlCommand = null;
 		private ICommand mTestUrl1Command = null;
 
@@ -40,8 +38,6 @@ namespace KnowledgeBase.ViewModel
 
 			BrowserAddress = TestResourceUrl;
 
-			RegisterMarkDownContent();
-
 			mTestUrlCommand = new RelayCommand(() =>
 			{
 				// Setting this address sets the current address of the browser
@@ -55,8 +51,8 @@ namespace KnowledgeBase.ViewModel
 
 				if (browser == null)
 					return;
-
-				RefreshMarkDownRegistration(browser.ResourceHandlerFactory);
+				
+				browser.ShowDevTools();
 
 				// Setting this address sets the current address of the browser
 				// control via bound BrowserAddress property
@@ -125,10 +121,11 @@ namespace KnowledgeBase.ViewModel
 
 			if (factory != null)
 			{
-				factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(markdownStyle));
+				var githubMarkdownCss = ReadFileContents("SampleData/github-markdown.css");
+				factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(githubMarkdownCss));
 
 				const string responseBody =
-				"<html><head><link rel=\"stylesheet\" href=\"github-markdown.css\"></head>"
+				"<html><head><link rel=\"stylesheet\" href=\"" + TestMarkDownStyleURL + "\"></head>"
 				  + "<body><h1>About</h1>"
 					+ "<p>This sample application implements a <b>ResourceHandler</b> "
 					+ "which can be used to fullfil custom network requests as explained here:"
@@ -151,50 +148,21 @@ namespace KnowledgeBase.ViewModel
 
 				factory.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
 
-				RefreshMarkDownRegistration(factory);
+				var markDown = new Markdown();
+
+				var markdownContent = ReadFileContents("SampleData/README.md");
+
+				var html = new StringBuilder();
+			
+				html.Append("<html><head><link rel=\"stylesheet\" href=\"" + TestMarkDownStyleURL + "\"></head>" + "<body><h1>About</h1>");
+				html.Append(markDown.Transform(markdownContent));
+				html.Append("</body></html>");
+
+				factory.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(html.ToString()));
 			}
-		}
-
-		/// <summary>
-		/// Unrigisters the old markdown registration (if any) and renews
-		/// the markdown registration with current content.
-		/// 
-		/// Source: https://github.com/cefsharp/CefSharp/pull/857
-		/// </summary>
-		/// <param name="handler"></param>
-		public void RefreshMarkDownRegistration(IResourceHandlerFactory factory)
-		{
-			factory.UnregisterHandler(TestMarkDown2HTMLConversion);
-
-			RegisterMarkDownContent();
-
-			factory.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(markdownHTMLOutput));
 		}
 
 		#region MarkDown Sample Methods
-		/// <summary>
-		/// Reload the markdown file and register its content at the correct URL.
-		/// </summary>
-		/// <param name="This"></param>
-		/// <returns></returns>
-		public bool RegisterMarkDownContent()
-		{
-			try
-			{
-				var markDown = new Markdown();
-
-				markdownStyle = FileContents("SampleData/github-markdown.css");
-
-				markdownContent = FileContents("SampleData/README.md");
-				markdownHTMLOutput = markDown.Transform(markdownContent);
-
-				return true;
-			}
-			catch (System.Exception)
-			{
-				return false;
-			}
-		}
 
 		/// <summary>
 		/// returns the root path of the currently executing assembly
@@ -219,7 +187,7 @@ namespace KnowledgeBase.ViewModel
 		/// 
 		/// Source: http://code.google.com/p/markdownsharp/
 		/// </summary>
-		private static string FileContents(string filename)
+		private static string ReadFileContents(string filename)
 		{
 			try
 			{
