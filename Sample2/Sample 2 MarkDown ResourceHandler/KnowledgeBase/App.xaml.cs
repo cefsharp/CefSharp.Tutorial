@@ -32,7 +32,6 @@
 			viewModel.RegisterTestResources(mainWindow.browser);
 
 			mainWindow.DataContext = viewModel;
-			mainWindow.RegisterBrowserEvents();
 
 			mainWindow.Show();
 		}

@@ -17,18 +17,9 @@
 		public MainWindow()
 		{
 			InitializeComponent();
-		}
 
-		public void RegisterBrowserEvents()
-		{
-			try
-			{
-				browser.StatusMessage += BrowserStatusMessage;
-				browser.NavStateChanged += BrowserNavStateChanged;
-			}
-			catch (Exception)
-			{
-			}
+			browser.StatusMessage += BrowserStatusMessage;
+			browser.NavStateChanged += BrowserNavStateChanged;
 		}
 
 		/// <summary>
