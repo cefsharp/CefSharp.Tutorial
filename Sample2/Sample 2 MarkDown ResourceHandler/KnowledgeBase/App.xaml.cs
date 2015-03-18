@@ -29,7 +29,6 @@
 			var mainWindow = new MainWindow();
 			var appVM = new AppViewModel();
 
-			AppViewModel.RegisterMarkDownContent(appVM);
 			appVM.RegisterTestResources(mainWindow.browser);
 
 			mainWindow.DataContext = appVM;

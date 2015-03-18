@@ -39,6 +39,8 @@ namespace KnowledgeBase.ViewModel
 
 			BrowserAddress = AppViewModel.TestResourceUrl;
 
+			RegisterMarkDownContent();
+
 			mTestUrlCommand = new RelayCommand(() =>
 			{
 				// Setting this address sets the current address of the browser
@@ -163,7 +165,7 @@ namespace KnowledgeBase.ViewModel
 		{
 			handler.UnregisterHandler(TestMarkDown2HTMLConversion);
 
-			RegisterMarkDownContent(this);
+			RegisterMarkDownContent();
 
 			handler.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(markdownHTMLOutput));
 		}
@@ -174,16 +176,16 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		/// <param name="This"></param>
 		/// <returns></returns>
-		public static bool RegisterMarkDownContent(AppViewModel viewModel)
+		public bool RegisterMarkDownContent()
 		{
 			try
 			{
 				var markDown = new Markdown();
 
-				viewModel.markdownStyle = AppViewModel.FileContents("SampleData/github-markdown.css");
+				markdownStyle = AppViewModel.FileContents("SampleData/github-markdown.css");
 
-				viewModel.markdownContent = AppViewModel.FileContents("SampleData/README.md");
-				viewModel.markdownHTMLOutput = markDown.Transform(viewModel.markdownContent);
+				markdownContent = AppViewModel.FileContents("SampleData/README.md");
+				markdownHTMLOutput = markDown.Transform(markdownContent);
 
 				return true;
 			}
