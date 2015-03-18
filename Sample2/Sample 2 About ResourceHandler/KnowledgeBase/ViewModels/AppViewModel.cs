@@ -1,10 +1,10 @@
-﻿namespace KnowledgeBase.ViewModel
-{
-	using System.Reflection;
-	using System.Windows.Input;
-	using CefSharp;
-	using KnowledgeBase.ViewModels.Commands;
+﻿using System.Reflection;
+using System.Windows.Input;
+using CefSharp;
+using KnowledgeBase.ViewModels.Commands;
 
+namespace KnowledgeBase.ViewModel
+{
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>

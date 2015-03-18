@@ -1,11 +1,11 @@
-﻿namespace KnowledgeBase
-{
-	using System;
-	using System.Windows;
-	using System.Windows.Threading;
-	using CefSharp;
-	using KnowledgeBase.ViewModel;
+﻿using System;
+using System.Windows;
+using System.Windows.Threading;
+using CefSharp;
+using KnowledgeBase.ViewModel;
 
+namespace KnowledgeBase
+{
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
@@ -23,8 +23,8 @@
 
 			this.DataContext = new AppViewModel();
 
-			browser.StatusMessage += browser_StatusMessage;
-			browser.NavStateChanged += browser_NavStateChanged;
+			browser.StatusMessage += BrowserStatusMessage;
+			browser.NavStateChanged += BrowserNavStateChanged;
 		}
 
 		/// <summary>
@@ -33,7 +33,7 @@
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void browser_NavStateChanged(object sender, NavStateChangedEventArgs e)
+		private void BrowserNavStateChanged(object sender, NavStateChangedEventArgs e)
 		{
 			if (e.CanReload == false)
 			{
@@ -59,7 +59,7 @@
 			}
 		}
 
-		void browser_StatusMessage(object sender, StatusMessageEventArgs e)
+		private void BrowserStatusMessage(object sender, StatusMessageEventArgs e)
 		{
 			// Do this on the UI thread since it otherwise throws an exception ...
 			Dispatcher.BeginInvoke

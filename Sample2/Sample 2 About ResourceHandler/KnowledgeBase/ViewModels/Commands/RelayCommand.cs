@@ -1,9 +1,9 @@
-﻿namespace KnowledgeBase.ViewModels.Commands
-{
-	using System;
-	using System.Diagnostics;
-	using System.Windows.Input;
+﻿using System;
+using System.Diagnostics;
+using System.Windows.Input;
 
+namespace KnowledgeBase.ViewModels.Commands
+{
 	/// <summary>
 	/// A command whose sole purpose is to 
 	/// relay its functionality to other

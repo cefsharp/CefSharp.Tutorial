@@ -1,9 +1,9 @@
-﻿namespace KnowledgeBase.Base
-{
-	using System;
-	using System.ComponentModel;
-	using System.Linq.Expressions;
+﻿using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 
+namespace KnowledgeBase.Base
+{
 	/// <summary>
 	/// Class implements a simple viewmodel base class that implements the
 	/// <seealso cref="INotifyPropertyChanged"/> interface. Other viewmodel

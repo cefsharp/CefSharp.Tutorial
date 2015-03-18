@@ -1,8 +1,8 @@
-﻿namespace KnowledgeBase
-{
-	using System.Windows;
-	using CefSharp;
+﻿using System.Windows;
+using CefSharp;
 
+namespace KnowledgeBase
+{
 	/// <summary>
 	/// Interaction logic for App.xaml
 	/// </summary>
