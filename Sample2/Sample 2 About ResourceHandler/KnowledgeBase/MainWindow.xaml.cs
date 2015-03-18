@@ -41,7 +41,7 @@
 			if (e.CanReload == false)
 			{
 				// Do this on the UI thread since it otherwise throws an exception ...
-				Application.Current.Dispatcher.BeginInvoke
+				Dispatcher.BeginInvoke
 				(
 					new Action(() =>
 					{
@@ -52,7 +52,7 @@
 			else
 			{
 				// Do this on the UI thread since it otherwise throws an exception ...
-				Application.Current.Dispatcher.BeginInvoke
+				Dispatcher.BeginInvoke
 				(
 					new Action(() =>
 					{
@@ -65,7 +65,7 @@
 		void browser_StatusMessage(object sender, StatusMessageEventArgs e)
 		{
 			// Do this on the UI thread since it otherwise throws an exception ...
-			Application.Current.Dispatcher.BeginInvoke
+			Dispatcher.BeginInvoke
 			(
 				new Action(() =>
 				{
