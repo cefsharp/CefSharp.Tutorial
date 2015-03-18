@@ -1,15 +1,16 @@
-﻿namespace KnowledgeBase.ViewModel
-{
-	using System.IO;
-	using System.Reflection;
-	using System.Windows.Input;
-	using CefSharp;
-	using KnowledgeBase.ViewModels.Commands;
+﻿using System.IO;
+using System.Reflection;
+using System.Windows.Input;
+using CefSharp;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 
+namespace KnowledgeBase.ViewModel
+{
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
-	public class AppViewModel : Base.ViewModelBase
+	public class AppViewModel : ViewModelBase
 	{
 		#region fields
 		public const string TestResourceUrl = "http://test/resource/about";
@@ -36,6 +37,28 @@
 			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
 			this.BrowserAddress = AppViewModel.TestResourceUrl;
+
+			this.mTestUrlCommand = new RelayCommand(() =>
+			{
+				// Setting this address sets the current address of the browser
+				// control via bound BrowserAddress property
+				this.BrowserAddress = AppViewModel.TestResourceUrl;
+			});
+
+			this.mTestUrl1Command = new RelayCommand<object>((p) =>
+			{
+				var browser = p as IWebBrowser;
+
+				if (browser == null)
+					return;
+
+				this.RefreshMarkDownRegistration(browser.ResourceHandlerFactory);
+
+				// Setting this address sets the current address of the browser
+				// control via bound BrowserAddress property
+
+				this.BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
+			});
 		}
 		#endregion constructors
 
@@ -67,10 +90,7 @@
 		/// </summary>
 		public string BrowserTitle
 		{
-			get
-			{
-				return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress);
-			}
+			get { return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress); }
 		}
 
 		/// <summary>
@@ -78,20 +98,7 @@
 		/// </summary>
 		public ICommand TestUrlCommand
 		{
-			get
-			{
-				if (this.mTestUrlCommand == null)
-				{
-					this.mTestUrlCommand = new RelayCommand(() => 
-					{
-						// Setting this address sets the current address of the browser
-						// control via bound BrowserAddress property
-						this.BrowserAddress = AppViewModel.TestResourceUrl;
-					});
-				}
-
-				return this.mTestUrlCommand;
-			}
+			get { return this.mTestUrlCommand; }
 		}
 
 		/// <summary>
@@ -99,28 +106,7 @@
 		/// </summary>
 		public ICommand TestUrl1Command
 		{
-			get
-			{
-				if (this.mTestUrl1Command == null)
-				{
-					this.mTestUrl1Command = new RelayCommand<object>((p) =>
-					{
-						var browser = p as IWebBrowser;
-
-						if (browser == null)
-							return;
-						
-						this.RefreshMarkDownRegistration(browser.ResourceHandlerFactory);
-
-						// Setting this address sets the current address of the browser
-						// control via bound BrowserAddress property
-
-						this.BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
-					});
-				}
-
-				return this.mTestUrl1Command;
-			}
+			get { return this.mTestUrl1Command; }
 		}
 		#endregion properties
 
@@ -131,11 +117,11 @@
 		/// <param name="browser"></param>
 		public void RegisterTestResources(IWebBrowser browser)
 		{
-			var handler = browser.ResourceHandlerFactory;
+			var factory = browser.ResourceHandlerFactory;
 
-			if (handler != null)
+			if (factory != null)
 			{
-				handler.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(this.markdownStyle));
+				factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(this.markdownStyle));
 
 				const string responseBody =
 				"<html><head><link rel=\"stylesheet\" href=\"github-markdown.css\"></head>"
@@ -159,9 +145,9 @@
 					+ "<p>and Cef at Google: <a href=\"https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling\">https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling</a>"
 					+ "</body></html>";
 
-				handler.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
+				factory.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
 
-				this.RefreshMarkDownRegistration(handler);
+				this.RefreshMarkDownRegistration(factory);
 			}
 		}
 
@@ -176,7 +162,7 @@
 		{
 			handler.UnregisterHandler(TestMarkDown2HTMLConversion);
 
-			AppViewModel.RegisterMarkDownContent(this);
+			RegisterMarkDownContent(this);
 
 			handler.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(this.markdownHTMLOutput));
 		}
