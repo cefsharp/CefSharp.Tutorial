@@ -38,7 +38,7 @@ namespace KnowledgeBase.ViewModel
 		{
 			mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			BrowserAddress = AppViewModel.TestResourceUrl;
+			BrowserAddress = TestResourceUrl;
 
 			RegisterMarkDownContent();
 
@@ -46,7 +46,7 @@ namespace KnowledgeBase.ViewModel
 			{
 				// Setting this address sets the current address of the browser
 				// control via bound BrowserAddress property
-				BrowserAddress = AppViewModel.TestResourceUrl;
+				BrowserAddress = TestResourceUrl;
 			});
 
 			mTestUrl1Command = new RelayCommand<object>((p) =>
@@ -61,7 +61,7 @@ namespace KnowledgeBase.ViewModel
 				// Setting this address sets the current address of the browser
 				// control via bound BrowserAddress property
 
-				BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
+				BrowserAddress = TestMarkDown2HTMLConversion;
 			});
 		}
 		#endregion constructors
@@ -183,9 +183,9 @@ namespace KnowledgeBase.ViewModel
 			{
 				var markDown = new Markdown();
 
-				markdownStyle = AppViewModel.FileContents("SampleData/github-markdown.css");
+				markdownStyle = FileContents("SampleData/github-markdown.css");
 
-				markdownContent = AppViewModel.FileContents("SampleData/README.md");
+				markdownContent = FileContents("SampleData/README.md");
 				markdownHTMLOutput = markDown.Transform(markdownContent);
 
 				return true;
