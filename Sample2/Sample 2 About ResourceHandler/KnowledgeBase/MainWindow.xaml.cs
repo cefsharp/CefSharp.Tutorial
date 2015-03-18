@@ -21,7 +21,7 @@ namespace KnowledgeBase
 
 			AppViewModel.RegisterTestResources(this.browser);
 
-			this.DataContext = new AppViewModel();
+			DataContext = new AppViewModel();
 
 			browser.StatusMessage += BrowserStatusMessage;
 			browser.NavStateChanged += BrowserNavStateChanged;
@@ -35,28 +35,14 @@ namespace KnowledgeBase
 		/// <param name="e"></param>
 		private void BrowserNavStateChanged(object sender, NavStateChangedEventArgs e)
 		{
-			if (e.CanReload == false)
-			{
-				// Do this on the UI thread since it otherwise throws an exception ...
-				Dispatcher.BeginInvoke
-				(
-					new Action(() =>
-					{
-						this.Status.Text = "Loading...";
-					}
-				), DispatcherPriority.Background);
-			}
-			else
-			{
-				// Do this on the UI thread since it otherwise throws an exception ...
-				Dispatcher.BeginInvoke
-				(
-					new Action(() =>
-					{
-						this.Status.Text = "Loading done.";
-					}
-				), DispatcherPriority.Background);
-			}
+			// Do this on the UI thread since it otherwise throws an exception ...
+			Dispatcher.BeginInvoke
+			(
+				new Action(() =>
+				{
+					Status.Text = e.CanReload ? "Loading done." : "Loading...";
+				}
+			), DispatcherPriority.Background);
 		}
 
 		private void BrowserStatusMessage(object sender, StatusMessageEventArgs e)
@@ -66,7 +52,7 @@ namespace KnowledgeBase
 			(
 				new Action(() =>
 				{
-					this.Status.Text = e.Value;
+					Status.Text = e.Value;
 				}
 			), DispatcherPriority.Background );
 		}
