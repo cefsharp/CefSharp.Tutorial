@@ -162,13 +162,13 @@ namespace KnowledgeBase.ViewModel
 		/// Source: https://github.com/cefsharp/CefSharp/pull/857
 		/// </summary>
 		/// <param name="handler"></param>
-		public void RefreshMarkDownRegistration(IResourceHandlerFactory handler)
+		public void RefreshMarkDownRegistration(IResourceHandlerFactory factory)
 		{
-			handler.UnregisterHandler(TestMarkDown2HTMLConversion);
+			factory.UnregisterHandler(TestMarkDown2HTMLConversion);
 
 			RegisterMarkDownContent();
 
-			handler.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(markdownHTMLOutput));
+			factory.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(markdownHTMLOutput));
 		}
 
 		#region MarkDown Sample Methods
