@@ -35,9 +35,6 @@
 		/// <param name="e"></param>
 		void browser_NavStateChanged(object sender, NavStateChangedEventArgs e)
 		{
-			if (e == null)
-				return;
-
 			if (e.CanReload == false)
 			{
 				// Do this on the UI thread since it otherwise throws an exception ...
