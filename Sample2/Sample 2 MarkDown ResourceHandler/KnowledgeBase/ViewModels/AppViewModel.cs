@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Windows.Input;
 using CefSharp;
+using CefSharp.Wpf;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MarkdownSharp;
@@ -50,7 +51,7 @@ namespace KnowledgeBase.ViewModel
 
 			mTestUrl1Command = new RelayCommand<object>((p) =>
 			{
-				var browser = p as IWebBrowser;
+				var browser = p as IWpfWebBrowser;
 
 				if (browser == null)
 					return;
