@@ -4,6 +4,7 @@ using System.Windows.Input;
 using CefSharp;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MarkdownSharp;
 
 namespace KnowledgeBase.ViewModel
 {
@@ -34,30 +35,30 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public AppViewModel()
 		{
-			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
+			mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			this.BrowserAddress = AppViewModel.TestResourceUrl;
+			BrowserAddress = AppViewModel.TestResourceUrl;
 
-			this.mTestUrlCommand = new RelayCommand(() =>
+			mTestUrlCommand = new RelayCommand(() =>
 			{
 				// Setting this address sets the current address of the browser
 				// control via bound BrowserAddress property
-				this.BrowserAddress = AppViewModel.TestResourceUrl;
+				BrowserAddress = AppViewModel.TestResourceUrl;
 			});
 
-			this.mTestUrl1Command = new RelayCommand<object>((p) =>
+			mTestUrl1Command = new RelayCommand<object>((p) =>
 			{
 				var browser = p as IWebBrowser;
 
 				if (browser == null)
 					return;
 
-				this.RefreshMarkDownRegistration(browser.ResourceHandlerFactory);
+				RefreshMarkDownRegistration(browser.ResourceHandlerFactory);
 
 				// Setting this address sets the current address of the browser
 				// control via bound BrowserAddress property
 
-				this.BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
+				BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
 			});
 		}
 		#endregion constructors
@@ -70,16 +71,16 @@ namespace KnowledgeBase.ViewModel
 		{
 			get
 			{
-				return this.mBrowserAddress;
+				return mBrowserAddress;
 			}
 
 			set
 			{
-				if (this.mBrowserAddress != value)
+				if (mBrowserAddress != value)
 				{
-					this.mBrowserAddress = value;
-					this.RaisePropertyChanged(() => this.BrowserAddress);
-					this.RaisePropertyChanged(() => this.BrowserTitle);
+					mBrowserAddress = value;
+					RaisePropertyChanged(() => BrowserAddress);
+					RaisePropertyChanged(() => BrowserTitle);
 				}
 			}
 		}
@@ -90,7 +91,7 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public string BrowserTitle
 		{
-			get { return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress); }
+			get { return string.Format("{0} - {1}", mAssemblyTitle, mBrowserAddress); }
 		}
 
 		/// <summary>
@@ -98,7 +99,7 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public ICommand TestUrlCommand
 		{
-			get { return this.mTestUrlCommand; }
+			get { return mTestUrlCommand; }
 		}
 
 		/// <summary>
@@ -106,7 +107,7 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public ICommand TestUrl1Command
 		{
-			get { return this.mTestUrl1Command; }
+			get { return mTestUrl1Command; }
 		}
 		#endregion properties
 
@@ -121,7 +122,7 @@ namespace KnowledgeBase.ViewModel
 
 			if (factory != null)
 			{
-				factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(this.markdownStyle));
+				factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(markdownStyle));
 
 				const string responseBody =
 				"<html><head><link rel=\"stylesheet\" href=\"github-markdown.css\"></head>"
@@ -147,7 +148,7 @@ namespace KnowledgeBase.ViewModel
 
 				factory.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
 
-				this.RefreshMarkDownRegistration(factory);
+				RefreshMarkDownRegistration(factory);
 			}
 		}
 
@@ -164,7 +165,7 @@ namespace KnowledgeBase.ViewModel
 
 			RegisterMarkDownContent(this);
 
-			handler.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(this.markdownHTMLOutput));
+			handler.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(markdownHTMLOutput));
 		}
 
 		#region MarkDown Sample Methods
@@ -173,16 +174,16 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		/// <param name="This"></param>
 		/// <returns></returns>
-		public static bool RegisterMarkDownContent(AppViewModel This)
+		public static bool RegisterMarkDownContent(AppViewModel viewModel)
 		{
 			try
 			{
-				var m = new MarkdownSharp.Markdown();
+				var markDown = new Markdown();
 
-				This.markdownStyle = AppViewModel.FileContents("SampleData/github-markdown.css");
+				viewModel.markdownStyle = AppViewModel.FileContents("SampleData/github-markdown.css");
 
-				This.markdownContent = AppViewModel.FileContents("SampleData/README.md");
-				This.markdownHTMLOutput = m.Transform(This.markdownContent);
+				viewModel.markdownContent = AppViewModel.FileContents("SampleData/README.md");
+				viewModel.markdownHTMLOutput = markDown.Transform(viewModel.markdownContent);
 
 				return true;
 			}
