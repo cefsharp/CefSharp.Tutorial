@@ -16,15 +16,15 @@
 		/// </summary>
 		public MainWindow()
 		{
-			this.InitializeComponent();
+			InitializeComponent();
 		}
 
 		public void RegisterBrowserEvents()
 		{
 			try
 			{
-				this.browser.StatusMessage += this.browser_StatusMessage;
-				this.browser.NavStateChanged += this.browser_NavStateChanged;
+				browser.StatusMessage += BrowserStatusMessage;
+				browser.NavStateChanged += BrowserNavStateChanged;
 			}
 			catch (Exception)
 			{
@@ -37,33 +37,16 @@
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void browser_NavStateChanged(object sender, NavStateChangedEventArgs e)
+		private void BrowserNavStateChanged(object sender, NavStateChangedEventArgs e)
 		{
-			if (e == null)
-				return;
-
-			if (e.CanReload == false)
-			{
-				// Do this on the UI thread since it otherwise throws an exception ...
-				Dispatcher.BeginInvoke
-				(
-					new Action(() =>
-					{
-						this.Status.Text = "Loading...";
-					}
-				), DispatcherPriority.Background);
-			}
-			else
-			{
-				// Do this on the UI thread since it otherwise throws an exception ...
-				Dispatcher.BeginInvoke
-				(
-					new Action(() =>
-					{
-						this.Status.Text = "Loading done.";
-					}
-				), DispatcherPriority.Background);
-			}
+			// Do this on the UI thread since it otherwise throws an exception ...
+			Dispatcher.BeginInvoke
+			(
+				new Action(() =>
+				{
+					Status.Text = e.CanReload ? "Loading done." : "Loading...";
+				}
+			), DispatcherPriority.Background);
 		}
 
 		/// <summary>
@@ -72,14 +55,14 @@
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void browser_StatusMessage(object sender, StatusMessageEventArgs e)
+		private void BrowserStatusMessage(object sender, StatusMessageEventArgs e)
 		{
 			// Do this on the UI thread since it otherwise throws an exception ...
 			Dispatcher.BeginInvoke
 			(
 				new Action(() =>
 				{
-					this.Status.Text = e.Value;
+					Status.Text = e.Value;
 				}
 			), DispatcherPriority.Background );
 		}
