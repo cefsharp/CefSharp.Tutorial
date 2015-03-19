@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿namespace KnowledgeBase.ViewModel
 {
 	using System.Reflection;
@@ -5,7 +6,16 @@
 	using CefSharp;
 	using GalaSoft.MvvmLight;
 	using GalaSoft.MvvmLight.Command;
+=======
+﻿using System.Reflection;
+using System.Windows.Input;
+using CefSharp;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+>>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 
+namespace KnowledgeBase.ViewModel
+{
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
@@ -28,9 +38,23 @@
 		/// </summary>
 		public AppViewModel()
 		{
-			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
+			mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			this.BrowserAddress = AppViewModel.TestResourceUrl;
+			BrowserAddress = AppViewModel.TestResourceUrl;
+
+			mTestUrlCommand = new RelayCommand(() =>
+			{
+				// Setting this address sets the current address of the browser
+				// control via bound BrowserAddress property
+				BrowserAddress = AppViewModel.TestResourceUrl;
+			});
+
+			mTestUrl1Command = new RelayCommand(() =>
+			{
+				// Setting this address sets the current address of the browser
+				// control via bound BrowserAddress property
+				BrowserAddress = AppViewModel.TestUnicodeResourceUrl;
+			});
 		}
 		#endregion constructors
 
@@ -42,14 +66,18 @@
 		{
 			get
 			{
-				return this.mBrowserAddress;
+				return mBrowserAddress;
 			}
 
 			set
 			{
-				if (this.mBrowserAddress != value)
+				if (mBrowserAddress != value)
 				{
+<<<<<<< HEAD
 					this.mBrowserAddress = value;
+=======
+					mBrowserAddress = value;
+>>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 					RaisePropertyChanged(() => BrowserAddress);
 					RaisePropertyChanged(() => BrowserTitle);
 				}
@@ -70,6 +98,7 @@
 		/// </summary>
 		public ICommand TestUrlCommand
 		{
+<<<<<<< HEAD
 			get
 			{
 				if (this.mTestUrlCommand == null)
@@ -84,6 +113,9 @@
 
 			  return this.mTestUrlCommand;
 			}
+=======
+			get { return mTestUrlCommand; }
+>>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 
 		/// <summary>
@@ -91,6 +123,7 @@
 		/// </summary>
 		public ICommand TestUrl1Command
 		{
+<<<<<<< HEAD
 			get
 			{
 				if (this.mTestUrl1Command == null)
@@ -105,6 +138,9 @@
 
 				return mTestUrl1Command;
 		  }
+=======
+			get { return mTestUrl1Command; }
+>>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 		#endregion properties
 
