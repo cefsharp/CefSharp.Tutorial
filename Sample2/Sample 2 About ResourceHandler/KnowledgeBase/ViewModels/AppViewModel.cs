@@ -1,12 +1,12 @@
-﻿namespace KnowledgeBase.ViewModel
-{
-	using System.Reflection;
-	using System.Windows.Input;
-	using CefSharp;
-	using GalaSoft.MvvmLight;
-	using GalaSoft.MvvmLight.Command;
+﻿using System.Reflection;
+using System.Windows.Input;
+using CefSharp;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 
-	/// <summary>
+namespace KnowledgeBase.ViewModels
+{
+    /// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
 	public class AppViewModel : ViewModelBase

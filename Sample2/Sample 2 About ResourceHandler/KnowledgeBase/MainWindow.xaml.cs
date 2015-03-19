@@ -1,12 +1,13 @@
-﻿namespace KnowledgeBase
+﻿using KnowledgeBase.ViewModels;
+
+namespace KnowledgeBase
 {
 	using System;
 	using System.Windows;
 	using System.Windows.Threading;
 	using CefSharp;
-	using KnowledgeBase.ViewModel;
 
-	/// <summary>
+    /// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window
