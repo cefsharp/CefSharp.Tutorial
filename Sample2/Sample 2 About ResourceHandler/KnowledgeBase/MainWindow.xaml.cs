@@ -1,62 +1,51 @@
-﻿using KnowledgeBase.ViewModels;
+﻿using System;
+using System.Windows;
+using System.Windows.Threading;
+using CefSharp;
+using KnowledgeBase.ViewModels;
 
 namespace KnowledgeBase
 {
-	using System;
-	using System.Windows;
-	using System.Windows.Threading;
-	using CefSharp;
-
     /// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
-		#region contructors
-		/// <summary>
-		/// Class Constructor
-		/// </summary>
-		public MainWindow()
-		{
-			this.InitializeComponent();
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        #region Contructor
 
-			AppViewModel.RegisterTestResources(this.browser);
+        /// <summary>
+        /// MainWindow Constructor
+        /// </summary>
+        public MainWindow()
+        {
+            InitializeComponent();
 
-			DataContext = new AppViewModel();
+            AppViewModel.RegisterTestResources(browser);
 
-			browser.StatusMessage += BrowserStatusMessage;
-			browser.NavStateChanged += BrowserNavStateChanged;
-		}
+            DataContext = new AppViewModel();
 
-		/// <summary>
-		/// Is called on change of browser load state and notifies the statusbar
-		/// to say 'Loading...' or 'Loading done.'
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void BrowserNavStateChanged(object sender, NavStateChangedEventArgs e)
-		{
-			// Do this on the UI thread since it otherwise throws an exception ...
-			Dispatcher.BeginInvoke
-			(
-				new Action(() =>
-				{
-					Status.Text = e.CanReload ? "Loading done." : "Loading...";
-				}
-			), DispatcherPriority.Background);
-		}
+            browser.StatusMessage += BrowserStatusMessage;
+            browser.NavStateChanged += BrowserNavStateChanged;
+        }
 
-		private void BrowserStatusMessage(object sender, StatusMessageEventArgs e)
-		{
-			// Do this on the UI thread since it otherwise throws an exception ...
-			Dispatcher.BeginInvoke
-			(
-				new Action(() =>
-				{
-					Status.Text = e.Value;
-				}
-			), DispatcherPriority.Background );
-		}
-		#endregion contructors
-	}
+        #endregion Contructor
+
+        /// <summary>
+        /// Is called on change of browser load state and notifies the statusbar
+        /// to say 'Loading...' or 'Loading done.'
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowserNavStateChanged(object sender, NavStateChangedEventArgs e)
+        {
+            // Do this on the UI thread since it otherwise throws an exception ...
+            Dispatcher.BeginInvoke(new Action(() => { Status.Text = e.CanReload ? "Loading done." : "Loading..."; }), DispatcherPriority.Background);
+        }
+
+        private void BrowserStatusMessage(object sender, StatusMessageEventArgs e)
+        {
+            // Do this on the UI thread since it otherwise throws an exception ...
+            Dispatcher.BeginInvoke(new Action(() => { Status.Text = e.Value; }), DispatcherPriority.Background);
+        }
+    }
 }

@@ -4,43 +4,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-		xmlns:conv="clr-namespace:KnowledgeBase.ViewModels.Converters"
-		xmlns:viewModels="clr-namespace:KnowledgeBase.ViewModels"
-		mc:Ignorable="d"
+        xmlns:conv="clr-namespace:KnowledgeBase.ViewModels.Converters"
+        xmlns:viewModels="clr-namespace:KnowledgeBase.ViewModels"
+        mc:Ignorable="d"
         d:DataContext="{d:DesignInstance d:Type=viewModels:AppViewModel, IsDesignTimeCreatable=True}"
         Title="{Binding BrowserTitle, Mode=OneWay}" Height="550" Width="825">
     <Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-			<Grid Grid.Row="0">
-			<Grid.Resources>
-				<conv:InverseBooleanConverter x:Key="InverseConv" />
-			</Grid.Resources>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.Resources>
+                <conv:InverseBooleanConverter x:Key="InverseConv" />
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-			<Button Content="About"
-			        Command="{Binding TestUrlCommand}"
-							IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}"/>
+            <Button Content="About"
+                    Command="{Binding TestUrlCommand}"
+                    IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}" />
 
-			<Button Content="Test URL 2" Grid.Column="1"
-			        Command="{Binding TestUrl1Command}"
-							IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}"/>
-		</Grid>
+            <Button Content="Test URL 2" Grid.Column="1"
+                    Command="{Binding TestUrl1Command}"
+                    IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}" />
+        </Grid>
 
-		<cefSharp:ChromiumWebBrowser Grid.Row="1"
-		                             Address="{Binding BrowserAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-																 Title="{Binding BrowserTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-																 Name="browser" />
+        <cefSharp:ChromiumWebBrowser Grid.Row="1"
+                                     Address="{Binding BrowserAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Title="{Binding BrowserTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Name="browser" />
 
-		<StatusBar Grid.Row="2" >
-			<TextBlock Name="Status" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-		</StatusBar>
-  </Grid>
+        <StatusBar Grid.Row="2">
+            <TextBlock Name="Status" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </StatusBar>
+    </Grid>
 </Window>
