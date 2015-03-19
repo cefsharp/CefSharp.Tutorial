@@ -15,11 +15,19 @@
 		public const string TestResourceUrl = "http://test/resource/load";
 		public const string TestUnicodeResourceUrl = "http://test/resource/loadUnicode";
 
-		private ICommand mTestUrlCommand = null;
-		private ICommand mTestUrl1Command = null;
 
 		private string mBrowserAddress;
 		private string mAssemblyTitle;
+
+        /// <summary>
+        /// Get test Command to browse to a test URL ...
+        /// </summary>
+        public ICommand TestUrlCommand { get; private set; }
+        /// <summary>
+        /// Get test Command to browse to a test URL 1 ...
+        /// </summary>
+        public ICommand TestUrl1Command { get; private set; }
+        
 		#endregion fields
 
 		#region constructors
@@ -31,6 +39,20 @@
 			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
 			this.BrowserAddress = AppViewModel.TestResourceUrl;
+
+            TestUrlCommand = new RelayCommand(() =>
+            {
+                // Setting this address sets the current address of the browser
+                // control via bound BrowserAddress property
+                this.BrowserAddress = AppViewModel.TestResourceUrl;
+            });
+
+            TestUrl1Command = new RelayCommand(() =>
+            {
+                // Setting this address sets the current address of the browser
+                // control via bound BrowserAddress property
+                this.BrowserAddress = AppViewModel.TestUnicodeResourceUrl;
+            });
 		}
 		#endregion constructors
 
@@ -65,47 +87,6 @@
 			get { return string.Format("{0} - {1}", mAssemblyTitle, mBrowserAddress); }
 		}
 
-		/// <summary>
-		/// Get test Command to browse to a test URL ...
-		/// </summary>
-		public ICommand TestUrlCommand
-		{
-			get
-			{
-				if (this.mTestUrlCommand == null)
-				{
-					this.mTestUrlCommand = new RelayCommand(() =>
-					{
-						// Setting this address sets the current address of the browser
-						// control via bound BrowserAddress property
-						this.BrowserAddress = AppViewModel.TestResourceUrl;
-					});
-				}
-
-			  return this.mTestUrlCommand;
-			}
-		}
-
-		/// <summary>
-		/// Get test Command to browse to a test URL 1 ...
-		/// </summary>
-		public ICommand TestUrl1Command
-		{
-			get
-			{
-				if (this.mTestUrl1Command == null)
-				{
-					this.mTestUrl1Command = new RelayCommand(() =>
-					{
-						// Setting this address sets the current address of the browser
-						// control via bound BrowserAddress property
-						this.BrowserAddress = AppViewModel.TestUnicodeResourceUrl;
-					});
-				}
-
-				return mTestUrl1Command;
-		  }
-		}
 		#endregion properties
 
 		#region methods
