@@ -38,20 +38,20 @@ namespace KnowledgeBase.ViewModels
 		{
 			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			this.BrowserAddress = AppViewModel.TestResourceUrl;
+			this.BrowserAddress = TestResourceUrl;
 
             TestUrlCommand = new RelayCommand(() =>
             {
                 // Setting this address sets the current address of the browser
                 // control via bound BrowserAddress property
-                this.BrowserAddress = AppViewModel.TestResourceUrl;
+                this.BrowserAddress = TestResourceUrl;
             });
 
             TestUrl1Command = new RelayCommand(() =>
             {
                 // Setting this address sets the current address of the browser
                 // control via bound BrowserAddress property
-                this.BrowserAddress = AppViewModel.TestUnicodeResourceUrl;
+                this.BrowserAddress = TestUnicodeResourceUrl;
             });
 		}
 		#endregion constructors
