@@ -21,10 +21,10 @@
 
 			AppViewModel.RegisterTestResources(this.browser);
 
-			this.DataContext = new AppViewModel();
+			DataContext = new AppViewModel();
 
-			browser.StatusMessage += browser_StatusMessage;
-			browser.NavStateChanged += browser_NavStateChanged;
+			browser.StatusMessage += BrowserStatusMessage;
+			browser.NavStateChanged += BrowserNavStateChanged;
 		}
 
 		/// <summary>
@@ -33,43 +33,26 @@
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void browser_NavStateChanged(object sender, NavStateChangedEventArgs e)
-		{
-			if (e == null)
-				return;
-
-			if (e.CanReload == false)
-			{
-				// Do this on the UI thread since it otherwise throws an exception ...
-				Application.Current.Dispatcher.BeginInvoke
-				(
-					new Action(() =>
-					{
-						this.Status.Text = "Loading...";
-					}
-				), DispatcherPriority.Background);
-			}
-			else
-			{
-				// Do this on the UI thread since it otherwise throws an exception ...
-				Application.Current.Dispatcher.BeginInvoke
-				(
-					new Action(() =>
-					{
-						this.Status.Text = "Loading done.";
-					}
-				), DispatcherPriority.Background);
-			}
-		}
-
-		void browser_StatusMessage(object sender, StatusMessageEventArgs e)
+		private void BrowserNavStateChanged(object sender, NavStateChangedEventArgs e)
 		{
 			// Do this on the UI thread since it otherwise throws an exception ...
-			Application.Current.Dispatcher.BeginInvoke
+			Dispatcher.BeginInvoke
 			(
 				new Action(() =>
 				{
-					this.Status.Text = e.Value;
+					Status.Text = e.CanReload ? "Loading done." : "Loading...";
+				}
+			), DispatcherPriority.Background);
+		}
+
+		private void BrowserStatusMessage(object sender, StatusMessageEventArgs e)
+		{
+			// Do this on the UI thread since it otherwise throws an exception ...
+			Dispatcher.BeginInvoke
+			(
+				new Action(() =>
+				{
+					Status.Text = e.Value;
 				}
 			), DispatcherPriority.Background );
 		}

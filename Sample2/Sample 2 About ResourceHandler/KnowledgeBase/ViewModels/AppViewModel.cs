@@ -3,12 +3,13 @@
 	using System.Reflection;
 	using System.Windows.Input;
 	using CefSharp;
-	using KnowledgeBase.ViewModels.Commands;
+	using GalaSoft.MvvmLight;
+	using GalaSoft.MvvmLight.Command;
 
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
-	public class AppViewModel : Base.ViewModelBase
+	public class AppViewModel : ViewModelBase
 	{
 		#region fields
 		public const string TestResourceUrl = "http://test/resource/load";
@@ -49,8 +50,8 @@
 				if (this.mBrowserAddress != value)
 				{
 					this.mBrowserAddress = value;
-					this.RaisePropertyChanged(() => this.BrowserAddress);
-					this.RaisePropertyChanged(() => this.BrowserTitle);
+					RaisePropertyChanged(() => BrowserAddress);
+					RaisePropertyChanged(() => BrowserTitle);
 				}
 			}
 		}
@@ -61,10 +62,7 @@
 		/// </summary>
 		public string BrowserTitle
 		{
-			get
-			{
-				return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress);
-			}
+			get { return string.Format("{0} - {1}", mAssemblyTitle, mBrowserAddress); }
 		}
 
 		/// <summary>
@@ -76,7 +74,7 @@
 			{
 				if (this.mTestUrlCommand == null)
 				{
-					this.mTestUrlCommand = new RelayCommand(() => 
+					this.mTestUrlCommand = new RelayCommand(() =>
 					{
 						// Setting this address sets the current address of the browser
 						// control via bound BrowserAddress property
@@ -84,7 +82,7 @@
 					});
 				}
 
-				return this.mTestUrlCommand;
+			  return this.mTestUrlCommand;
 			}
 		}
 
@@ -105,8 +103,8 @@
 					});
 				}
 
-				return this.mTestUrl1Command;
-			}
+				return mTestUrl1Command;
+		  }
 		}
 		#endregion properties
 
@@ -117,9 +115,9 @@
 		/// <param name="browser"></param>
 		public static void RegisterTestResources(IWebBrowser browser)
 		{
-			var handler = browser.ResourceHandlerFactory;
+			var factory = browser.ResourceHandlerFactory;
 
-			if (handler != null)
+			if (factory != null)
 			{
 				const string responseBody =
 				"<html>"
@@ -143,10 +141,10 @@
 					+ "<p>and Cef at Google: <a href=\"https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling\">https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling</a>"
 					+ "</body></html>";
 
-				handler.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
+				factory.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
 
 				const string unicodeResponseBody = "<html><body>整体满意度</body></html>";
-				handler.RegisterHandler(TestUnicodeResourceUrl, ResourceHandler.FromString(unicodeResponseBody));
+				factory.RegisterHandler(TestUnicodeResourceUrl, ResourceHandler.FromString(unicodeResponseBody));
 			}
 		}
 		#endregion methods

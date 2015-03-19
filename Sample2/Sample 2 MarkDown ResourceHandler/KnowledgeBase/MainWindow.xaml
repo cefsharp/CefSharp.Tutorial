@@ -20,9 +20,10 @@
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-        <Button Content="About"
+      <Button Content="About"
 			        Command="{Binding TestUrlCommand}"
 							IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}"/>
 
@@ -30,7 +31,12 @@
 			        Command="{Binding TestUrl1Command}"
               CommandParameter="{Binding ElementName=browser}"
 							IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}"/>
-		</Grid>
+
+      <Button Content="Dev Tools" Grid.Column="2"
+			        Command="{Binding DevToolsCommand}"
+              CommandParameter="{Binding ElementName=browser}"
+							IsEnabled="{Binding ElementName=browser, Path=IsLoading, Converter={StaticResource InverseConv}}"/>
+    </Grid>
 
 		<cefSharp:ChromiumWebBrowser Grid.Row="1"
 		                             Address="{Binding BrowserAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

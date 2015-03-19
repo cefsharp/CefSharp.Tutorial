@@ -2,26 +2,27 @@
 {
 	using System.IO;
 	using System.Reflection;
+	using System.Text;
 	using System.Windows.Input;
 	using CefSharp;
-	using KnowledgeBase.ViewModels.Commands;
+	using CefSharp.Wpf;
+	using GalaSoft.MvvmLight;
+	using GalaSoft.MvvmLight.Command;
+	using MarkdownSharp;
 
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
-	public class AppViewModel : Base.ViewModelBase
+	public class AppViewModel : ViewModelBase
 	{
 		#region fields
 		public const string TestResourceUrl = "http://test/resource/about";
 		public const string TestMarkDown2HTMLConversion = "http://test/resource/markdown";
 		public const string TestMarkDownStyleURL = "http://test/resource/github-markdown.css";
 
-		private string markdownStyle;
-		private string markdownContent;
-		private string markdownHTMLOutput;
-
 		private ICommand mTestUrlCommand = null;
 		private ICommand mTestUrl1Command = null;
+		private ICommand mDevToolsCommand = null;
 
 		private string mBrowserAddress;
 		private string mAssemblyTitle;
@@ -35,7 +36,7 @@
 		{
 			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			this.BrowserAddress = AppViewModel.TestResourceUrl;
+			this.BrowserAddress = TestResourceUrl;
 		}
 		#endregion constructors
 
@@ -55,8 +56,8 @@
 				if (this.mBrowserAddress != value)
 				{
 					this.mBrowserAddress = value;
-					this.RaisePropertyChanged(() => this.BrowserAddress);
-					this.RaisePropertyChanged(() => this.BrowserTitle);
+					RaisePropertyChanged(() => this.BrowserAddress);
+					RaisePropertyChanged(() => this.BrowserTitle);
 				}
 			}
 		}
@@ -67,10 +68,7 @@
 		/// </summary>
 		public string BrowserTitle
 		{
-			get
-			{
-				return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress);
-			}
+			get { return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress); }
 		}
 
 		/// <summary>
@@ -82,7 +80,7 @@
 			{
 				if (this.mTestUrlCommand == null)
 				{
-					this.mTestUrlCommand = new RelayCommand(() => 
+					this.mTestUrlCommand = new RelayCommand(() =>
 					{
 						// Setting this address sets the current address of the browser
 						// control via bound BrowserAddress property
@@ -105,21 +103,47 @@
 				{
 					this.mTestUrl1Command = new RelayCommand<object>((p) =>
 					{
-						var browser = p as IWebBrowser;
+						var browser = p as IWpfWebBrowser;
 
 						if (browser == null)
 							return;
-						
-						this.RefreshMarkDownRegistration(browser.ResourceHandlerFactory);
+
+						// Unregister and Register mardown sample address to refresh content in viewer
+						this.RegisterMarkdownTestResources(browser);
 
 						// Setting this address sets the current address of the browser
 						// control via bound BrowserAddress property
-
+						this.BrowserAddress = string.Empty;
 						this.BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
 					});
 				}
 
 				return this.mTestUrl1Command;
+			}
+		}
+
+		/// <summary>
+		/// Get Command to open Cef's dev tools
+		/// </summary>
+		public ICommand DevToolsCommand
+		{
+			get
+			{
+				if (this.mDevToolsCommand == null)
+				{
+					this.mDevToolsCommand = new RelayCommand<object>((p) =>
+					{
+						var browser = p as IWpfWebBrowser;
+
+						if (browser == null)
+							return;
+
+						// Show the Cef Development Tools Window for debugging web page content ...
+						browser.ShowDevTools();
+					});
+				}
+
+				return this.mDevToolsCommand;
 			}
 		}
 		#endregion properties
@@ -131,81 +155,84 @@
 		/// <param name="browser"></param>
 		public void RegisterTestResources(IWebBrowser browser)
 		{
-			var handler = browser.ResourceHandlerFactory;
+			var factory = browser.ResourceHandlerFactory;
 
-			if (handler != null)
-			{
-				handler.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(this.markdownStyle));
+			if (factory == null)
+				return;
 
-				const string responseBody =
-				"<html><head><link rel=\"stylesheet\" href=\"github-markdown.css\"></head>"
-				  + "<body><h1>About</h1>"
-					+ "<p>This sample application implements a <b>ResourceHandler</b> "
-					+ "which can be used to fullfil custom network requests as explained here:"
-					+ "<a href=\"http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part 2\">http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part 2</a>"
-					+ ".</p>"
-					+ "<hr/><p>"
-					+ "This sample is based on the Continues Integration (CI) for CefSharp from MyGet: <a href=\"https://www.myget.org/F/cefsharp/\">https://www.myget.org/F/cefsharp/</a>"
-					+ " since it relies on the resolution of some known problems in the current release version: <b>37.0.0</b>.</p>"
-					+ "<ul>"
-					+ "<li><a href=\"https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855\">https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855</a></li>"
-					+ "<li><a href=\"https://github.com/cefsharp/CefSharp/pull/857\">https://github.com/cefsharp/CefSharp/pull/857</a></li>"
-					+ "</ul>"
-					+ "<hr/><p>"
-					+ "Feel free to switch over to NuGet: <a href=\"https://www.nuget.org/packages/CefSharp.Wpf/\">https://www.nuget.org/packages/CefSharp.Wpf/</a>"
-					+ " when version 39.0.0 or later is released.</p>"
-					+ "<hr/>"
-					+ "<p>See also CefSharp on GitHub: <a href=\"https://github.com/cefsharp\">https://github.com/cefsharp</a><br/>"
-					+ "<p>and Cef at Google: <a href=\"https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling\">https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling</a>"
-					+ "</body></html>";
+			var githubMarkdownCss = ReadFileContents("SampleData/github-markdown.css");
+			factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(githubMarkdownCss));
 
-				handler.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
+			const string responseBody =
+			"<html><head><title>About this CefSharp Sample</title></head>"
+				+ "<body><h1>About</h1>"
+				+ "<p>This sample application implements a <b>ResourceHandler</b> "
+				+ "which can be used to fullfil custom network requests as explained here:"
+				+ "<a href=\"http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part 2\">http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part 2</a>"
+				+ ".</p>"
+				+ "<hr/><p>"
+				+ "This sample is based on the Continues Integration (CI) for CefSharp from MyGet: <a href=\"https://www.myget.org/F/cefsharp/\">https://www.myget.org/F/cefsharp/</a>"
+				+ " since it relies on the resolution of some known problems in the current release version: <b>37.0.0</b>.</p>"
+				+ "<ul>"
+				+ "<li><a href=\"https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855\">https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855</a></li>"
+				+ "<li><a href=\"https://github.com/cefsharp/CefSharp/pull/857\">https://github.com/cefsharp/CefSharp/pull/857</a></li>"
+				+ "</ul>"
+				+ "<hr/><p>"
+				+ "Feel free to switch over to NuGet: <a href=\"https://www.nuget.org/packages/CefSharp.Wpf/\">https://www.nuget.org/packages/CefSharp.Wpf/</a>"
+				+ " when version 39.0.0 or later is released.</p>"
+				+ "<hr/>"
+				+ "<p>See also CefSharp on GitHub: <a href=\"https://github.com/cefsharp\">https://github.com/cefsharp</a><br/>"
+				+ "<p>and Cef at Google: <a href=\"https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling\">https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling</a>"
+				+ "</body></html>";
 
-				this.RefreshMarkDownRegistration(handler);
-			}
+			factory.RegisterHandler(AppViewModel.TestResourceUrl, ResourceHandler.FromString(responseBody));
+
+			this.RegisterMarkdownTestResources(browser);
 		}
 
 		/// <summary>
-		/// Unrigisters the old markdown registration (if any) and renews
-		/// the markdown registration with current content.
-		/// 
-		/// Source: https://github.com/cefsharp/CefSharp/pull/857
+		/// Register and Refresh the Test URI for the MarkDown sample.
 		/// </summary>
-		/// <param name="handler"></param>
-		public void RefreshMarkDownRegistration(IResourceHandlerFactory handler)
+		/// <param name="browser"></param>
+		public void RegisterMarkdownTestResources(IWebBrowser browser)
 		{
-			handler.UnregisterHandler(TestMarkDown2HTMLConversion);
+			var factory = browser.ResourceHandlerFactory;
 
-			AppViewModel.RegisterMarkDownContent(this);
+			if (factory == null)
+				return;
 
-			handler.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(this.markdownHTMLOutput));
+			factory.UnregisterHandler(AppViewModel.TestMarkDown2HTMLConversion);
+
+			var markDown = new Markdown();
+
+			var markdownContent = ReadFileContents("SampleData/README.md");
+
+			var html = new StringBuilder();
+
+			html.Append("<html><head><link rel=\"stylesheet\" href=\"" + TestMarkDownStyleURL + "\"></head>" + "<body>"
+								+ "<style>"
+								+ "    .markdown-body {"         // Source: https://github.com/sindresorhus/github-markdown-css
+								+ "        min-width: 200px;"
+								+ "        max-width: 790px;"
+								+ "        margin: 0 auto;"
+								+ "        padding: 30px;"
+								+ "    }"
+								+ "</style>"
+								+ "<article class=\"markdown-body\">"
+
+								+ "<h1>About</h1>");
+
+			html.Append(markDown.Transform(markdownContent));
+
+			html.Append("</article>"
+								+ "</body></html>");
+
+			factory.RegisterHandler(AppViewModel.TestMarkDown2HTMLConversion,
+															ResourceHandler.FromString(html.ToString()));
 		}
+
 
 		#region MarkDown Sample Methods
-		/// <summary>
-		/// Reload the markdown file and register its content at the correct URL.
-		/// </summary>
-		/// <param name="This"></param>
-		/// <returns></returns>
-		public static bool RegisterMarkDownContent(AppViewModel This)
-		{
-			try
-			{
-				var m = new MarkdownSharp.Markdown();
-
-				This.markdownStyle = AppViewModel.FileContents("SampleData/github-markdown.css");
-
-				This.markdownContent = AppViewModel.FileContents("SampleData/README.md");
-				This.markdownHTMLOutput = m.Transform(This.markdownContent);
-
-				return true;
-			}
-			catch (System.Exception)
-			{
-				return false;
-			}
-		}
-
 		/// <summary>
 		/// returns the root path of the currently executing assembly
 		/// 
@@ -219,6 +246,7 @@
 
 				// removes executable part
 				path = Path.GetDirectoryName(path);
+
 				return path;
 			}
 		}
@@ -229,7 +257,7 @@
 		/// 
 		/// Source: http://code.google.com/p/markdownsharp/
 		/// </summary>
-		private static string FileContents(string filename)
+		private static string ReadFileContents(string filename)
 		{
 			try
 			{

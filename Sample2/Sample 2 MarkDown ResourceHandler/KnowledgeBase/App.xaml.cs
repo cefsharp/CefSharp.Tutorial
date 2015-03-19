@@ -27,13 +27,11 @@
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			var mainWindow = new MainWindow();
-			var appVM = new AppViewModel();
+			var viewModel = new AppViewModel();
 
-			AppViewModel.RegisterMarkDownContent(appVM);
-			appVM.RegisterTestResources(mainWindow.browser);
+			viewModel.RegisterTestResources(mainWindow.browser);
 
-			mainWindow.DataContext = appVM;
-			mainWindow.RegisterBrowserEvents();
+			mainWindow.DataContext = viewModel;
 
 			mainWindow.Show();
 		}

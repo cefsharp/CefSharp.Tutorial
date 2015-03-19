@@ -38,13 +38,9 @@ realized within the TestUrlCommands implemented in the same class.
 
 2 Using the Code
 
-- The constructor in App.xaml.cs contains an Cef.Initialize(); statement
+- The application starts-up in App.xaml.cs
 
-- The MainWindow.xaml is constructed and displayed via the StartupUri="MainWindow.xaml"
-  statement in the App.xaml
-  
-- The constructor of the MainWindow.xaml contains a constructor to create the
-  AppViewModel and attach it to the DataContext of the MainWindow
+- The MainWindow.xaml is constructed and displayed via start-up method in the App.xaml.cs
   
 - The binding statements in the MainWindow.xaml, eg:
    <cefSharp:ChromiumWebBrowser Address="{Binding BrowserAddress}"
@@ -52,30 +48,7 @@ realized within the TestUrlCommands implemented in the same class.
 
   bind into the AppViewModel and comunicate with it via binding.  
 
-- The AppViewModel implements 2 commands:
-  TestUrlCommand, TestUrl1Command
+- The AppViewModel implements all demo commands:
+  TestUrlCommand, TestUrl1Command, ...
 
   to test browsing forth and back between 2 urls.
-
-2.1 Code behind in MainWindow.xaml.cs
-
-The constructor of the MainWindow.cs class calls the
-AppViewModel.RegisterTestResources(this.browser);
-method to register the custom URLs for the ResourceHandler.
-
-The AppViewModel instance is attached to the MainWindow's DataContext (for binding)
-and the events: StatusMessage and NavStateChanged are registered with their corresponding
-methods.
-
-3 Known Issue
-
-Each Url can be used at most once.
-The Output (TW) in VS Studio shows an exception in mscorelib
-
-> Switch catch exception on in debugger and the exception reads something like:
-  DataStream was already closed...???
-
-  This is a known issue which is already fixed, so you either need to get the current
-  sources and do a local build instead of getting the Nuget version or you will have to
-  update the Nuget version (once the fix was realeased to Nuget).
-  https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855
