@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿namespace KnowledgeBase.ViewModel
 {
 	using System.Reflection;
@@ -6,16 +5,7 @@
 	using CefSharp;
 	using GalaSoft.MvvmLight;
 	using GalaSoft.MvvmLight.Command;
-=======
-﻿using System.Reflection;
-using System.Windows.Input;
-using CefSharp;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 
-namespace KnowledgeBase.ViewModel
-{
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
@@ -38,23 +28,9 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public AppViewModel()
 		{
-			mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
+			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			BrowserAddress = AppViewModel.TestResourceUrl;
-
-			mTestUrlCommand = new RelayCommand(() =>
-			{
-				// Setting this address sets the current address of the browser
-				// control via bound BrowserAddress property
-				BrowserAddress = AppViewModel.TestResourceUrl;
-			});
-
-			mTestUrl1Command = new RelayCommand(() =>
-			{
-				// Setting this address sets the current address of the browser
-				// control via bound BrowserAddress property
-				BrowserAddress = AppViewModel.TestUnicodeResourceUrl;
-			});
+			this.BrowserAddress = AppViewModel.TestResourceUrl;
 		}
 		#endregion constructors
 
@@ -66,18 +42,14 @@ namespace KnowledgeBase.ViewModel
 		{
 			get
 			{
-				return mBrowserAddress;
+				return this.mBrowserAddress;
 			}
 
 			set
 			{
-				if (mBrowserAddress != value)
+				if (this.mBrowserAddress != value)
 				{
-<<<<<<< HEAD
 					this.mBrowserAddress = value;
-=======
-					mBrowserAddress = value;
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 					RaisePropertyChanged(() => BrowserAddress);
 					RaisePropertyChanged(() => BrowserTitle);
 				}
@@ -98,7 +70,6 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public ICommand TestUrlCommand
 		{
-<<<<<<< HEAD
 			get
 			{
 				if (this.mTestUrlCommand == null)
@@ -113,9 +84,6 @@ namespace KnowledgeBase.ViewModel
 
 			  return this.mTestUrlCommand;
 			}
-=======
-			get { return mTestUrlCommand; }
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 
 		/// <summary>
@@ -123,7 +91,6 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public ICommand TestUrl1Command
 		{
-<<<<<<< HEAD
 			get
 			{
 				if (this.mTestUrl1Command == null)
@@ -138,9 +105,6 @@ namespace KnowledgeBase.ViewModel
 
 				return mTestUrl1Command;
 		  }
-=======
-			get { return mTestUrl1Command; }
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 		#endregion properties
 

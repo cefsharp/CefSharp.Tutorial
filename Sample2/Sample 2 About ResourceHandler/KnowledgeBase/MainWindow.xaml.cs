@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Threading;
-using CefSharp;
-using KnowledgeBase.ViewModel;
-
-namespace KnowledgeBase
+﻿namespace KnowledgeBase
 {
+	using System;
+	using System.Windows;
+	using System.Windows.Threading;
+	using CefSharp;
+	using KnowledgeBase.ViewModel;
+
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>

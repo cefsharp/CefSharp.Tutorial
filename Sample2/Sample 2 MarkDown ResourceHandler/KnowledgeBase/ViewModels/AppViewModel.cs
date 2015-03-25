@@ -1,17 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Windows.Input;
-using System.Text;
-using CefSharp;
-using CefSharp.Wpf;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using MarkdownSharp;
-
-namespace KnowledgeBase.ViewModel
+﻿namespace KnowledgeBase.ViewModel
 {
-<<<<<<< HEAD
 	using System.IO;
 	using System.Reflection;
 	using System.Text;
@@ -22,8 +10,6 @@ namespace KnowledgeBase.ViewModel
 	using GalaSoft.MvvmLight.Command;
 	using MarkdownSharp;
 
-=======
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 	/// <summary>
 	/// ApplicationViewModel manages the appplications state and its main objects.
 	/// </summary>
@@ -48,35 +34,9 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public AppViewModel()
 		{
-			mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
+			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
 
-			BrowserAddress = TestResourceUrl;
-
-			mTestUrlCommand = new RelayCommand(() =>
-			{
-				// Setting this address sets the current address of the browser
-				// control via bound BrowserAddress property
-				BrowserAddress = TestResourceUrl;
-			});
-
-			mTestUrl1Command = new RelayCommand<object>((p) =>
-			{
-				var browser = p as IWpfWebBrowser;
-
-				if (browser == null)
-					return;
-				
-				browser.ShowDevTools();
-
-				// Setting this address sets the current address of the browser
-				// control via bound BrowserAddress property
-
-<<<<<<< HEAD
 			this.BrowserAddress = TestResourceUrl;
-=======
-				BrowserAddress = TestMarkDown2HTMLConversion;
-			});
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 		#endregion constructors
 
@@ -88,22 +48,16 @@ namespace KnowledgeBase.ViewModel
 		{
 			get
 			{
-				return mBrowserAddress;
+				return this.mBrowserAddress;
 			}
 
 			set
 			{
-				if (mBrowserAddress != value)
+				if (this.mBrowserAddress != value)
 				{
-<<<<<<< HEAD
 					this.mBrowserAddress = value;
 					RaisePropertyChanged(() => this.BrowserAddress);
 					RaisePropertyChanged(() => this.BrowserTitle);
-=======
-					mBrowserAddress = value;
-					RaisePropertyChanged(() => BrowserAddress);
-					RaisePropertyChanged(() => BrowserTitle);
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 				}
 			}
 		}
@@ -114,11 +68,7 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public string BrowserTitle
 		{
-<<<<<<< HEAD
 			get { return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress); }
-=======
-			get { return string.Format("{0} - {1}", mAssemblyTitle, mBrowserAddress); }
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 
 		/// <summary>
@@ -126,7 +76,6 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public ICommand TestUrlCommand
 		{
-<<<<<<< HEAD
 			get
 			{
 				if (this.mTestUrlCommand == null)
@@ -141,9 +90,6 @@ namespace KnowledgeBase.ViewModel
 
 				return this.mTestUrlCommand;
 			}
-=======
-			get { return mTestUrlCommand; }
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 
 		/// <summary>
@@ -151,7 +97,6 @@ namespace KnowledgeBase.ViewModel
 		/// </summary>
 		public ICommand TestUrl1Command
 		{
-<<<<<<< HEAD
 			get
 			{
 				if (this.mTestUrl1Command == null)
@@ -175,9 +120,6 @@ namespace KnowledgeBase.ViewModel
 
 				return this.mTestUrl1Command;
 			}
-=======
-			get { return mTestUrl1Command; }
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 		}
 
 		/// <summary>
@@ -215,7 +157,6 @@ namespace KnowledgeBase.ViewModel
 		{
 			var factory = browser.ResourceHandlerFactory;
 
-<<<<<<< HEAD
 			if (factory == null)
 				return;
 
@@ -289,52 +230,6 @@ namespace KnowledgeBase.ViewModel
 			factory.RegisterHandler(AppViewModel.TestMarkDown2HTMLConversion,
 															ResourceHandler.FromString(html.ToString()));
 		}
-=======
-			if (factory != null)
-			{
-				var githubMarkdownCss = ReadFileContents("SampleData/github-markdown.css");
-				factory.RegisterHandler(TestMarkDownStyleURL, ResourceHandler.FromString(githubMarkdownCss));
-
-				const string responseBody =
-				"<html><head><link rel=\"stylesheet\" href=\"" + TestMarkDownStyleURL + "\"></head>"
-				  + "<body><h1>About</h1>"
-					+ "<p>This sample application implements a <b>ResourceHandler</b> "
-					+ "which can be used to fullfil custom network requests as explained here:"
-					+ "<a href=\"http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part 2\">http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part 2</a>"
-					+ ".</p>"
-					+ "<hr/><p>"
-					+ "This sample is based on the Continues Integration (CI) for CefSharp from MyGet: <a href=\"https://www.myget.org/F/cefsharp/\">https://www.myget.org/F/cefsharp/</a>"
-					+ " since it relies on the resolution of some known problems in the current release version: <b>37.0.0</b>.</p>"
-					+ "<ul>"
-					+ "<li><a href=\"https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855\">https://github.com/cefsharp/CefSharp/commit/54b1520761da125b29322670504e98a2eb56c855</a></li>"
-					+ "<li><a href=\"https://github.com/cefsharp/CefSharp/pull/857\">https://github.com/cefsharp/CefSharp/pull/857</a></li>"
-					+ "</ul>"
-					+ "<hr/><p>"
-					+ "Feel free to switch over to NuGet: <a href=\"https://www.nuget.org/packages/CefSharp.Wpf/\">https://www.nuget.org/packages/CefSharp.Wpf/</a>"
-					+ " when version 39.0.0 or later is released.</p>"
-					+ "<hr/>"
-					+ "<p>See also CefSharp on GitHub: <a href=\"https://github.com/cefsharp\">https://github.com/cefsharp</a><br/>"
-					+ "<p>and Cef at Google: <a href=\"https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling\">https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling</a>"
-					+ "</body></html>";
-
-				factory.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
-
-				var markDown = new Markdown();
-
-				var markdownContent = ReadFileContents("SampleData/README.md");
-
-				var html = new StringBuilder();
-			
-				html.Append("<html><head><link rel=\"stylesheet\" href=\"" + TestMarkDownStyleURL + "\"></head>" + "<body><h1>About</h1>");
-				html.Append(markDown.Transform(markdownContent));
-				html.Append("</body></html>");
-
-				factory.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(html.ToString()));
-			}
-		}
-
-		#region MarkDown Sample Methods
->>>>>>> a787f766296714f01033b6dcd6f653157ae1f936
 
 
 		#region MarkDown Sample Methods

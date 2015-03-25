@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows.Data;
-
-namespace KnowledgeBase.ViewModels.Converters
+﻿namespace KnowledgeBase.ViewModels.Converters
 {
+	using System;
+	using System.Windows.Data;
+
 	/// <summary>
 	/// Converts a boolean value into its inverse value.
 	/// </summary>
