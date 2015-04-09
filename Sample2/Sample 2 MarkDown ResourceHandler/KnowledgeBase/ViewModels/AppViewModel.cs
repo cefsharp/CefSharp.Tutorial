@@ -20,27 +20,69 @@
 		public const string TestMarkDown2HTMLConversion = "http://test/resource/markdown";
 		public const string TestMarkDownStyleURL = "http://test/resource/github-markdown.css";
 
-		private ICommand mTestUrlCommand = null;
-		private ICommand mTestUrl1Command = null;
-		private ICommand mDevToolsCommand = null;
-
 		private string mBrowserAddress;
-		private string mAssemblyTitle;
 		#endregion fields
-
+		
 		#region constructors
 		/// <summary>
 		/// Class Constructor
 		/// </summary>
 		public AppViewModel()
 		{
-			this.mAssemblyTitle = Assembly.GetEntryAssembly().GetName().Name;
+			BrowserAddress = TestResourceUrl;
 
-			this.BrowserAddress = TestResourceUrl;
+			TestUrlCommand = new RelayCommand(() =>
+			{
+				// Setting this address sets the current address of the browser
+				// control via bound BrowserAddress property
+				BrowserAddress = AppViewModel.TestResourceUrl;
+			});
+
+			TestUrl1Command = new RelayCommand<object>((p) =>
+			{
+				var browser = p as IWpfWebBrowser;
+
+				if (browser == null)
+					return;
+
+				// Unregister and Register mardown sample address to refresh content in viewer
+				RegisterMarkdownTestResources(browser);
+
+				// Setting this address sets the current address of the browser
+				// control via bound BrowserAddress property
+				BrowserAddress = string.Empty;
+				BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
+			});
+
+			DevToolsCommand = new RelayCommand<object>((p) =>
+			{
+				var browser = p as IWpfWebBrowser;
+
+				if (browser != null)
+				{ 
+					// Show the Cef Development Tools Window for debugging web page content ...
+					browser.ShowDevTools();
+				}
+			});
 		}
 		#endregion constructors
 
 		#region properties
+		/// <summary>
+		/// Get test Command to browse to a test URL ...
+		/// </summary>
+		public ICommand TestUrlCommand { get; private set; }
+
+		/// <summary>
+		/// Get test Command to browse to a test URL 1 ...
+		/// </summary>
+		public ICommand TestUrl1Command { get; private set; }
+
+		/// <summary>
+		/// Get Command to open Cef's dev tools
+		/// </summary>
+		public ICommand DevToolsCommand { get; private set; }
+
 		/// <summary>
 		/// Get/set current address of web browser URI.
 		/// </summary>
@@ -48,16 +90,16 @@
 		{
 			get
 			{
-				return this.mBrowserAddress;
+				return mBrowserAddress;
 			}
 
 			set
 			{
-				if (this.mBrowserAddress != value)
+				if (mBrowserAddress != value)
 				{
-					this.mBrowserAddress = value;
-					RaisePropertyChanged(() => this.BrowserAddress);
-					RaisePropertyChanged(() => this.BrowserTitle);
+					mBrowserAddress = value;
+					RaisePropertyChanged(() => BrowserAddress);
+					RaisePropertyChanged(() => BrowserTitle);
 				}
 			}
 		}
@@ -68,83 +110,7 @@
 		/// </summary>
 		public string BrowserTitle
 		{
-			get { return string.Format("{0} - {1}", this.mAssemblyTitle, this.mBrowserAddress); }
-		}
-
-		/// <summary>
-		/// Get test Command to browse to a test URL ...
-		/// </summary>
-		public ICommand TestUrlCommand
-		{
-			get
-			{
-				if (this.mTestUrlCommand == null)
-				{
-					this.mTestUrlCommand = new RelayCommand(() =>
-					{
-						// Setting this address sets the current address of the browser
-						// control via bound BrowserAddress property
-						this.BrowserAddress = AppViewModel.TestResourceUrl;
-					});
-				}
-
-				return this.mTestUrlCommand;
-			}
-		}
-
-		/// <summary>
-		/// Get test Command to browse to a test URL 1 ...
-		/// </summary>
-		public ICommand TestUrl1Command
-		{
-			get
-			{
-				if (this.mTestUrl1Command == null)
-				{
-					this.mTestUrl1Command = new RelayCommand<object>((p) =>
-					{
-						var browser = p as IWpfWebBrowser;
-
-						if (browser == null)
-							return;
-
-						// Unregister and Register mardown sample address to refresh content in viewer
-						this.RegisterMarkdownTestResources(browser);
-
-						// Setting this address sets the current address of the browser
-						// control via bound BrowserAddress property
-						this.BrowserAddress = string.Empty;
-						this.BrowserAddress = AppViewModel.TestMarkDown2HTMLConversion;
-					});
-				}
-
-				return this.mTestUrl1Command;
-			}
-		}
-
-		/// <summary>
-		/// Get Command to open Cef's dev tools
-		/// </summary>
-		public ICommand DevToolsCommand
-		{
-			get
-			{
-				if (this.mDevToolsCommand == null)
-				{
-					this.mDevToolsCommand = new RelayCommand<object>((p) =>
-					{
-						var browser = p as IWpfWebBrowser;
-
-						if (browser == null)
-							return;
-
-						// Show the Cef Development Tools Window for debugging web page content ...
-						browser.ShowDevTools();
-					});
-				}
-
-				return this.mDevToolsCommand;
-			}
+			get { return string.Format("{0} - {1}", Assembly.GetEntryAssembly().GetName().Name, BrowserAddress); }
 		}
 		#endregion properties
 
@@ -185,9 +151,9 @@
 				+ "<p>and Cef at Google: <a href=\"https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling\">https://code.google.com/p/chromiumembedded/wiki/GeneralUsage#Request_Handling</a>"
 				+ "</body></html>";
 
-			factory.RegisterHandler(AppViewModel.TestResourceUrl, ResourceHandler.FromString(responseBody));
+			factory.RegisterHandler(TestResourceUrl, ResourceHandler.FromString(responseBody));
 
-			this.RegisterMarkdownTestResources(browser);
+			RegisterMarkdownTestResources(browser);
 		}
 
 		/// <summary>
@@ -201,7 +167,7 @@
 			if (factory == null)
 				return;
 
-			factory.UnregisterHandler(AppViewModel.TestMarkDown2HTMLConversion);
+			factory.UnregisterHandler(TestMarkDown2HTMLConversion);
 
 			var markDown = new Markdown();
 
@@ -224,11 +190,10 @@
 
 			html.Append(markDown.Transform(markdownContent));
 
-			html.Append("</article>"
-								+ "</body></html>");
+			html.Append("</article>");
+			html.Append("</body></html>");
 
-			factory.RegisterHandler(AppViewModel.TestMarkDown2HTMLConversion,
-															ResourceHandler.FromString(html.ToString()));
+			factory.RegisterHandler(TestMarkDown2HTMLConversion, ResourceHandler.FromString(html.ToString()));
 		}
 
 
