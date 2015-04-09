@@ -5,7 +5,7 @@ The solutions in the Sample<m>ofn Sub-Folder show step by step introductory WPF 
 
 Please be sure to read the Readme.txt files in each sub-folder to understand more details about each sample.
 
-## Sample1ofn
+## Sample1
 
 This is a minimal bare bones XAML+Nuget demo of the CefSharp project.
 [http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part](http://www.codeproject.com/Articles/881315/Display-HTML-in-WPF-and-CefSharp-Tutorial-Part)
