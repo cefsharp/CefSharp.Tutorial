@@ -1,3 +1,5 @@
+### This project is no longer maintained for a working example checkout the [CefSharp MinimalExample](https://github.com/cefsharp/CefSharp.MinimalExample) project
+
 # CefSharp.Tutorial
 CefSharp Tutorials - Basic Examples for getting Started
 
